@@ -12,6 +12,7 @@ namespace WindowsForms
 {
 	public partial class Form1 : Form
 	{
+		string font;
 		bool show_date;
 		bool visible_controls;
 		public Form1()
@@ -22,7 +23,7 @@ namespace WindowsForms
 				System.Windows.Forms.Screen.PrimaryScreen.Bounds.Right - this.Width - 50,
 				System.Windows.Forms.Screen.PrimaryScreen.Bounds.Top + 100
 				);
-			show_date= false;
+			show_date = false;
 			visible_controls = false;
 			btnHideControls.Visible = false;
 			btnClose.Visible = false;
@@ -41,6 +42,8 @@ namespace WindowsForms
 
 			this.ShowInTaskbar = visible_controls;
 			this.cbShowDate.Visible = visible_controls;
+
+			this.btnFont.Visible = visible_controls;
 
 			this.btnHideControls.Visible = visible_controls;
 			this.btnClose.Visible = visible_controls;
@@ -107,6 +110,23 @@ namespace WindowsForms
 			SetShowDate(cbShowDate.Checked);
 		}
 
-		
+		private void btnFont_Click(object sender, EventArgs e)
+		{
+			Font font = new Font();
+			font.ShowDialog(this);
+			label1.Font = font.OldFont;
+		}
+
+		private void foregroundToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			colorDialog1.ShowDialog(this);
+			label1.ForeColor = colorDialog1.Color;
+		}
+
+		private void backgroundToolStripMenuItem_Click(object sender, EventArgs e)
+		{
+			colorDialog1.ShowDialog(this);
+			label1.BackColor = colorDialog1.Color;
+		}
 	}
 }
