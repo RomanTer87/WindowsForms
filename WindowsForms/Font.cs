@@ -16,8 +16,9 @@ namespace WindowsForms
 	{
 		public System.Drawing.Font NewFont { get; set; }
 		public System.Drawing.Font OldFont { get; set; }
-		public Font()
+		public Font(System.Drawing.Font oldFont)
 		{
+			
 			InitializeComponent();
 		//	MessageBox.Show(this, currentDirectory, "Current directory", MessageBoxButtons.OK);
 		if(Directory.GetCurrentDirectory().Contains("bin"))	Directory.SetCurrentDirectory("..\\..\\Fonts");
@@ -27,7 +28,9 @@ namespace WindowsForms
 			{
 				if(i.Split('\\').Last().Contains(".ttf"))this.cbFont.Items.Add(i.Split('\\').Last());
 			}
-
+			OldFont = oldFont;
+			numericUpDownFontSize.Value = (decimal)OldFont.Size;
+			MessageBox.Show(this, OldFont.Name, "Font", MessageBoxButtons.OK);
 		}
 
 		private void btnCancel_Click(object sender, EventArgs e)
@@ -45,7 +48,8 @@ namespace WindowsForms
 		{
 			PrivateFontCollection pfs = new PrivateFontCollection();
 			pfs.AddFontFile(cbFont.SelectedItem.ToString());
-			NewFont = new System.Drawing.Font(pfs.Families[0], lblExample.Font.Size);
+			NewFont = new System.Drawing.Font(pfs.Families[0], (int)numericUpDownFontSize.Value);
+			//NewFont = new System.Drawing.Font(pfs.Families[0], lblExample.Font.Size);
 			lblExample.Font = NewFont;
 		}
 	}
