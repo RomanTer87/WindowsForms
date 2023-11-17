@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.IO;
+using Microsoft.Win32.SafeHandles;
+using System.Drawing.Text;
 
 namespace WindowsForms
 {
@@ -30,6 +33,39 @@ namespace WindowsForms
 			btnClose.Visible = false;
 
 			choose_font = new WindowsForms.Font(label1.Font);
+
+			LoadSettings();
+			//StreamReader sr = new StreamReader("Settings.cfg");
+			//string font_file = sr.ReadLine();
+			//int size = Convert.ToInt32(sr.ReadLine());
+			//sr.Close();
+		}
+		public void SaveSettings()
+		{
+			StreamWriter sw = new StreamWriter("Settings.cfg");
+			sw.WriteLine(choose_font.FontFile);
+			sw.WriteLine(label1.Font.Size);
+			sw.WriteLine(label1.ForeColor.ToArgb());
+			sw.WriteLine(label1.BackColor.ToArgb());
+			sw.Close();
+		}
+		public void LoadSettings() 
+		{
+			MessageBox.Show(this, Directory.GetCurrentDirectory(), "Directory", MessageBoxButtons.OK);
+			StreamReader sr = new StreamReader("Settings.cfg");
+			string font_file = sr.ReadLine();
+			int size = Convert.ToInt32(sr.ReadLine());
+			Color foreground = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
+			Color background = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
+			sr.Close();
+
+			PrivateFontCollection pfc = new PrivateFontCollection();
+			pfc.AddFontFile(font_file);
+			System.Drawing.Font font = new System.Drawing.Font(pfc.Families[0], size);
+			label1.Font = font;
+			label1.ForeColor = foreground;
+			label1.BackColor = background;
+
 		}
 		private void SetShowDate(bool show_date)
 		{
@@ -88,11 +124,13 @@ namespace WindowsForms
 
 		private void btnClose_Click(object sender, EventArgs e)
 		{
+			SaveSettings();
 			this.Close();
 		}
 
 		private void closeToolStripMenuItem_Click(object sender, EventArgs e)
 		{
+			SaveSettings();
 			this.Close();
 		}
 

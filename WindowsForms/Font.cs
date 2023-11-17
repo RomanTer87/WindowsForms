@@ -14,6 +14,7 @@ namespace WindowsForms
 {
 	public partial class Font : Form
 	{
+		public string FontFile { get; set; }
 		public System.Drawing.Font NewFont { get; set; }
 		public System.Drawing.Font OldFont { get; set; }
 		public Font(System.Drawing.Font oldFont)
@@ -27,12 +28,18 @@ namespace WindowsForms
 			foreach(string i in Directory.GetFiles(currentDirectory))
 			{
 				if(i.Split('\\').Last().Contains(".ttf"))this.cbFont.Items.Add(i.Split('\\').Last());
+				if(i.Split('\\').Last().Contains(".TTF"))this.cbFont.Items.Add(i.Split('\\').Last());
 			}
+			cbFont.SelectedIndex = 0;
 			OldFont = oldFont;
+			lblExample.Font = OldFont;
 			numericUpDownFontSize.Value = (decimal)OldFont.Size;
-			MessageBox.Show(this, OldFont.Name, "Font", MessageBoxButtons.OK);
+		//	MessageBox.Show(this, OldFont.Name, "Font", MessageBoxButtons.OK);
 		}
-
+		public int GetFontSize()
+		{
+			return (int)numericUpDownFontSize.Value;
+		}
 		private void btnCancel_Click(object sender, EventArgs e)
 		{
 			this.Close();
@@ -41,6 +48,7 @@ namespace WindowsForms
 		private void btnOk_Click(object sender, EventArgs e)
 		{
 			OldFont = NewFont;
+			FontFile = cbFont.SelectedItem.ToString();
 			this.Close();
 		}
 
@@ -51,6 +59,11 @@ namespace WindowsForms
 			NewFont = new System.Drawing.Font(pfs.Families[0], (int)numericUpDownFontSize.Value);
 			//NewFont = new System.Drawing.Font(pfs.Families[0], lblExample.Font.Size);
 			lblExample.Font = NewFont;
+		}
+
+		private void numericUpDownFontSize_ValueChanged(object sender, EventArgs e)
+		{
+			comboBox1_SelectionChangeCommitted(sender, e);
 		}
 	}
 }
