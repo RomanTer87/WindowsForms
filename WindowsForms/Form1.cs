@@ -15,7 +15,10 @@ namespace WindowsForms
 {
 	public partial class Form1 : Form
 	{
-		string font;
+		string font_file;
+		int size;
+		Color foreground;
+		Color background;
 		bool show_date;
 		bool visible_controls;
 		WindowsForms.Font choose_font;
@@ -34,16 +37,14 @@ namespace WindowsForms
 
 			choose_font = new WindowsForms.Font(label1.Font);
 
+			font_file = "";
 			LoadSettings();
-			//StreamReader sr = new StreamReader("Settings.cfg");
-			//string font_file = sr.ReadLine();
-			//int size = Convert.ToInt32(sr.ReadLine());
-			//sr.Close();
+			
 		}
 		public void SaveSettings()
 		{
 			StreamWriter sw = new StreamWriter("Settings.cfg");
-			sw.WriteLine(choose_font.FontFile);
+			sw.WriteLine(font_file);
 			sw.WriteLine(label1.Font.Size);
 			sw.WriteLine(label1.ForeColor.ToArgb());
 			sw.WriteLine(label1.BackColor.ToArgb());
@@ -51,12 +52,12 @@ namespace WindowsForms
 		}
 		public void LoadSettings() 
 		{
-			MessageBox.Show(this, Directory.GetCurrentDirectory(), "Directory", MessageBoxButtons.OK);
+			//MessageBox.Show(this, Directory.GetCurrentDirectory(), "Directory", MessageBoxButtons.OK);
 			StreamReader sr = new StreamReader("Settings.cfg");
-			string font_file = sr.ReadLine();
-			int size = Convert.ToInt32(sr.ReadLine());
-			Color foreground = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
-			Color background = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
+			font_file = sr.ReadLine();
+			size = Convert.ToInt32(sr.ReadLine());
+			foreground = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
+			background = Color.FromArgb(Convert.ToInt32(sr.ReadLine()));
 			sr.Close();
 
 			PrivateFontCollection pfc = new PrivateFontCollection();
@@ -154,8 +155,12 @@ namespace WindowsForms
 		private void btnFont_Click(object sender, EventArgs e)
 		{
 			//Font font = new Font(label1.Font);
-			choose_font.ShowDialog(this);
+			DialogResult result = choose_font.ShowDialog(this);
+			if(result == DialogResult.OK)
+			{
 			label1.Font = choose_font.OldFont;
+			font_file = choose_font.FontFile;
+			}
 		}
 
 		private void foregroundToolStripMenuItem_Click(object sender, EventArgs e)
